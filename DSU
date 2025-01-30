@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int N = 1e5+10;
+
+int parent[N];
+int Size[N];
+
+void make(int v){
+    parent[v]=v;
+    Size[v]=1;
+}
+int find(int v){   // ai function dia root_parent khujbo
+    if(v == parent[v]) return v;
+    return parent[v] = find(parent[v]);  // path compression korbo,parent ar parent k tar root_parent banabo
+}
+void Union(int a,int b){
+   a = find(a);// a node ar parent ber korbo
+   b = find(b); // b node ar parent ber korbo
+   if( a != b){  //parent alada hole tree 2 ti k 1ta arectar sathe add korbo size ar vittite
+    if( Size[a] < Size[b])
+       swap(a , b);  // small tree k large  tree ar sathe add korbo
+    parent[b] = a;
+    Size[a] += Size[b];
+   }
+}
+
+int main(){
+    int n,k; // there given n node and k edges
+    cin>>n >>k;
+    for(int i=1;i<=n;i++)
+    make(i);   // surute protita node ar parent se nijai
+    while(k--){
+        int u,v;
+        cin>>u>>v;
+        Union(u,v);
+    }
+    int connected_ct = 0; // connected component count korar jonno use korbo
+    for(int i=1;i<=n;i++){
+        if( i == parent[i] ) connected_ct++;
+    }
+    cout<<connected_ct<<endl;  // connected component print korbo
+    return 0;
+}
