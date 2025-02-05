@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int n,m;
+vector<vector<int>> graph;
+vector<int> dp;
+
+int func(int node){
+  // base case
+  if(graph[node].size()==0) return dp[node]=0;
+  if(dp[node]!=-1) return dp[node];
+  else{
+      for(auto child : graph[node]){   //here I use the dfs technique for finding the longest path length
+          dp[node] = max( dp[node] , 1 + func(child));
+      } 
+      return dp[node];
+  }
+  
+}
+
+int main(){
+   cin>>n>>m;
+   graph.resize(n+1);
+   dp.resize(n+1,-1);
+   int u,v;
+   for(int i=0;i<m;i++){
+      cin>>u>>v;
+      graph[u].push_back(v);
+   }
+   int ans = 0;
+   for(int i=1;i<=n;i++){
+       ans = max( ans,func(i));
+   }
+   cout<<ans<<endl;
+   return 0;
+}
