@@ -1,0 +1,49 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+void lcs(string s1, string s2, int m, int n){
+     int dp[m+1][n+1]; // row = n+1 and column = m+1
+
+     //dp tabulation for finding lcs
+     for(int i=0;i<=m;i++){
+        for(int j=0;j<=n;j++){
+            if(i==0 || j==0){
+                dp[i][j] = 0;
+            }
+            else if(s1[i-1] == s2[j-1]){
+                dp[i][j] = 1 + dp[i-1][j-1];  // dp[i-1][j-1] hocche , ager substring porjonto koyti character mill chilo
+            }
+            else{
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+            }
+        }
+     }
+     int lcs_len = dp[m][n];  // length of lcs 
+    // cout<<lcs_len<<endl;
+    //vector<char> lcs_str(lcs_len);
+    char lcs_str[lcs_len+1];
+    lcs_str[lcs_len]='\0';
+    int i = m,j = n;
+    while(i>0 && j>0){
+        if(s1[i-1] == s2[j-1]){
+            lcs_str[lcs_len-1] = s1[i-1];
+            i--;
+            j--;
+            lcs_len--;
+        }
+        else{
+            dp[i-1][j]>dp[i][j-1] ? i--:j--;
+        }
+    }
+
+    cout<<lcs_str<<endl;
+}
+
+int main(){
+    string s1,s2;
+    cin>>s1>>s2;
+    int m = s1.size(), n = s2.size();
+    lcs(s1, s2, m, n );
+   
+    return 0;
+}
