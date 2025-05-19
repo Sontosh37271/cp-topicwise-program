@@ -1,0 +1,61 @@
+#include <bits/stdc++.h>
+using namespace std;
+vector<vector<int>> table;
+
+void build_sparseTable(int n, vector<int>& arr){
+    int k =(int)log2(n); // koto porjonto row lagbe
+    table.resize(k+1,vector<int>(n)); // table a k ti row ache
+    for(int i=0;i<n;i++)
+        table[0][i] = arr[i];
+    for(int i=1;i<=k;i++){
+        for(int j=0;j+(1<<i)<=n;j++)
+            table[i][j] = min(table[i-1][j] , table[i-1][j+(1<<i-1)]); // this is sparse table[i][j]
+    }
+}
+int query(int l,int r){
+   int len = r-l+1;
+   int k = (int)log2(len);  // kon segment amake count korte hobe ta akhan thaka janbo
+   return min(table[k][l],table[k][r-(1<<k)+1]);
+}
+void solve()
+{
+    int n;
+    cin>>n;
+    vector<int> a(n);
+    for(int i=0;i<n;i++){
+        cin>>a[i];
+    }
+    build_sparseTable(n, a); // building sparse table
+    int q,l,r;
+    cin>>q;
+    while(q--){
+        cin>>l>>r;
+        cout<<query(l,r)<<endl;
+    }
+
+}
+
+int main()
+{
+    solve();
+    // int n;
+    // cin>>n;
+    // vector<int> a;
+    // for(int i=0;i<n;i++){
+    //     cin>>a[i];
+    // }
+    // build_sparseTable(n, a); // building sparse table
+    // int q,l,r;
+    // cin>>q;
+    // for(int i=0;i<q;i++){
+    //     cin>>l>>r;
+    //     int minValue = query(l,r);
+    //     cout<<minValue<<endl;
+    // }
+    // int t;
+    // cin >> t;
+    // while (t--)
+    // {
+    //    solve();
+    // }
+}
