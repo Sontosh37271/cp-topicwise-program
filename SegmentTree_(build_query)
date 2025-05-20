@@ -1,0 +1,38 @@
+// User function Template for C++
+
+class Solution {
+  public:
+    vector<int> segTree;
+    // It is build function
+    int build(int node, int arr[],int l,int r){
+        int mid = (l+r)/2;
+        if(l==r){
+           return segTree[node] = arr[l];  // I go segment when there is only one element
+        }
+        return segTree[node] = build(2*node,arr,l,mid) + build(2*node+1,arr,mid+1,r);
+        
+    }
+    // it is query function
+    int query(int node,int l,int r,int start,int end){
+        int mid = (start+end)/2;
+        if(l>=start && r<=end){
+            return segTree[node];
+        }
+        else if(r<start || l>end)
+            return 0;
+        else return query(2*node,l,r,start,mid) + query(2*node+1,l,r,mid+1,end);
+    }
+    
+    vector<int> querySum(int n, int arr[], int q, int queries[]) {
+        segTree.resize(4*n);
+        // building the segment tree
+        int val = build(1,arr,0,n-1); // node = 0, arr, l= 0, r=n-1
+        
+        vector<int> res;
+        for(int i=0;i<2*q;i+=2){
+            int l=queries[i]-1, r = queries[i+1]-1;
+            res.push_back(query(1,l,r,0,n-1));
+        }
+        return res;
+    }
+};
