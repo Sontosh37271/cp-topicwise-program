@@ -1,0 +1,79 @@
+class Solution {
+  public:
+    vector<int>lps;
+    void calLPS(string& s){
+        int n = s.size();
+        lps.resize(n);
+        lps[0]=0;
+        for(int i=1;i<n;i++){
+            int k = lps[i-1];
+            while(k>0 && s[k] != s[i]){
+                k = lps[k-1]; 
+            }
+            if(s[k] == s[i]){
+                lps[i] = k+1;
+            }
+            else lps[i] = k;   // if k = 0 but s[k] != s[i] then lps[i] = 0;
+        }
+    }
+    vector<int> search(string& pat, string& txt) {
+        vector<int>ans;
+        int n = pat.size();
+       
+        calLPS( pat ); // generate the lps vector , longest prefix suffix
+        int match = 0;
+        int k=0;
+        for(int i=0;i<txt.size();i++){
+            while(k>0 && txt[i] != pat[k]){
+                    k = lps[k-1];
+            }
+                // akhon k == 0 hote pare ba na pare
+            if(k==0 && txt[i] != pat[k]){
+                    continue;
+            }
+            else{ //else if((k>0 && txt[i] == pat[k])||(k==0 && txt[i] == pat[k]))
+                                                    
+                k++;
+                if(k == n){
+                    ans.push_back(i-n+1);
+                    match++;
+                    k = lps[k-1];
+                }
+            }
+            
+            // this is also solution , I can use any 
+            
+            // if(k==0 && txt[i] != pat[k]){
+            //     continue;
+            // }
+            
+            // else if(k>0 && txt[i] != pat[k]){
+            //     while(k>0 && txt[i] != pat[k]){
+            //         k = lps[k-1];
+            //     }
+            //     // akhon k == 0 hote pare ba na pare
+            //     if(k==0 && txt[i] != pat[k]){
+            //         continue;
+            //     }
+            //     else{ //else if((k>0 && txt[i] == pat[k])||(k==0 && txt[i] == pat[k]))
+                                                    
+            //         k++;
+            //         if(k == n){
+            //             ans.push_back(i-n+1);
+            //             match++;
+            //             k = lps[k-1];
+            //         }
+            //     }
+            // }
+            // else { //if(txt[i] == pat[k])
+            //     k++;
+            //     if(k == n){
+            //         ans.push_back(i-n+1);
+            //         match++;
+            //         k = lps[k-1];
+            //     }
+            // }
+        }
+        return ans;
+    }
+};
