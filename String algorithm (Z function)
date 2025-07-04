@@ -1,0 +1,26 @@
+class Solution {
+  public:
+    vector<int> search(string pat, string txt) {
+        int n = pat.size();
+        string pattern = pat+'$'+txt;
+        int m = pattern.size();
+        int l,r;
+        l=0,r=0;
+        vector<int>z(m+1,0);
+        
+        for(int i=1;i<m;i++){
+            if(i<=r){   // i within 
+              z[i]=min(z[i-l],r-i+1);
+            }
+            while(i+z[i]<m && pattern[z[i]] == pattern[i+z[i]]){
+                z[i]++;
+            }
+            if(i+z[i]-1>r){  // if it exceed the window size then we need to resize the window
+            
+                l=i;
+                r=i+z[i]-1;
+            }
+        }
+        return z;
+    }
+};
